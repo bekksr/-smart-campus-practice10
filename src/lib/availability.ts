@@ -16,6 +16,14 @@ export interface CheckRequest {
 export function checkAvailability(req: CheckRequest): CheckOutcome {
   const { start, end, currentTime, room, existingBookings } = req;
 
+  if (
+    !Number.isFinite(start) ||
+    !Number.isFinite(end) ||
+    !Number.isFinite(currentTime)
+  ) {
+    return unavailable('Times must be finite numeric values.');
+  }
+
   // AC1: valid interval — 0 ≤ start < end ≤ 1440 and start after current time
   if (start < 0 || start >= MINUTES_PER_DAY || end < 0 || end > MINUTES_PER_DAY) {
     return unavailable('Times must be between 00:00 and 24:00.');
